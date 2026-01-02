@@ -4,6 +4,7 @@ import com.vidura.lmsbackend.dto.ServerResponse;
 import com.vidura.lmsbackend.dto.SubjectDTO;
 import com.vidura.lmsbackend.service.SubjectService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ class SubjectController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ServerResponse<SubjectDTO>> addSubject(@RequestBody SubjectDTO subjectDTO) {
+    public ResponseEntity<ServerResponse<SubjectDTO>> addSubject(@RequestBody @Validated SubjectDTO subjectDTO) {
         ServerResponse<SubjectDTO> sub = new ServerResponse<>();
         try{
              sub = subjectService.createSubject(subjectDTO);

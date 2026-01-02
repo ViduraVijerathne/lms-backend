@@ -55,20 +55,22 @@ public class AuthService {
     }
 
     public User getCurrentUser() {
-        // 1. Get the Authentication object from the SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 2. Check if a user is actually logged in
         if (authentication == null || !authentication.isAuthenticated() ||
                 "anonymousUser".equals(authentication.getPrincipal())) {
             throw new RuntimeException("No user is currently logged in");
         }
 
-        // 3. Extract the username (works whether Principal is a String or UserDetails)
         String username = authentication.getName();
 
-        // 4. Fetch the full User entity from the database
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found in database"));
+    }
+
+    public AuthResponse getMe() {
+        User user = getCurrentUser();
+
+        return new AuthResponse(null, user.getUsername(), user.getRole().name());
     }
 }
