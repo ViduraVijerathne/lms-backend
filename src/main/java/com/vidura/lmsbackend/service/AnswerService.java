@@ -36,4 +36,49 @@ class AnswerService {
             response.setData(answerDTO);
             return response;
    }
+
+   public ServerResponse<AnswerDTO> updateAnswer(Long id,AnswerDTO answerDTO) {
+        Optional<Answer> answer = answerRepository.findById(id);
+        if(answer.isPresent()) {
+            ServerResponse<AnswerDTO> response = new ServerResponse<>();
+            Answer ans = new Answer();
+            ans.setAnswer(answerDTO.getAnswer());
+            ans.setId(answerDTO.getId());
+            Optional<Question> question = questionRepository.findById(answerDTO.getId());
+            if(question.isPresent()) {
+                ans.setQuestion(question.get());
+            }else{
+                throw new RuntimeException("Question not found");
+            }
+            answerRepository.save(ans);
+            response.setData(answerDTO);
+            return response;
+        }else{
+            throw new RuntimeException("Answer not found");
+        }
+   }
+
+   public ServerResponse<AnswerDTO> getAnswer(Long id) {
+        ServerResponse<AnswerDTO> response = new ServerResponse<>();
+        Optional<Answer> answer = answerRepository.findById(id);
+        if(answer.isPresent()) {
+            AnswerDTO answerDTO = new AnswerDTO();
+            answerDTO.setAnswer(answer.get().getAnswer());
+            answerDTO.setId(answer.get().getId());
+            answerDTO.setQuestionID(answer.get().getQuestion().getId());
+            response.setData(answerDTO);
+            return response;
+        }else{
+            throw new RuntimeException("Answer not found");
+        }
+   }
+
+   public void deleteAnswer(Long id) {
+        Optional<Answer> answer = answerRepository.findById(id);
+        if(answer.isPresent()) {
+            answerRepository.deleteById(id);
+        }else{
+            throw new RuntimeException("Answer not found");
+        }
+   }
 }
