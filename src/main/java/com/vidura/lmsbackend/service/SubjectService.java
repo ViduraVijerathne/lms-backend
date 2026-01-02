@@ -32,6 +32,10 @@ class SubjectService {
     public ServerResponse<List<SubjectDTO>> getAllSubjects() {
         ServerResponse<List<SubjectDTO>> serverResponse = new ServerResponse<>();
         List<Subject> subjects = subjectRepository.findAll();
-        serverResponse.setData();
+        List<SubjectDTO> subjectDTOs = subjects.stream()
+                .map(Subject::toDTO)
+                .toList(); // Java 16+
+        serverResponse.setData(subjectDTOs);
+        return serverResponse;
     }
 }
