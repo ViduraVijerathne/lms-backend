@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class SubjectService {
+public class SubjectService {
 
     private final SubjectRepository subjectRepository;
 
