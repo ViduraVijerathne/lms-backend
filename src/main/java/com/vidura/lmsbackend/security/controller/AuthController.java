@@ -4,6 +4,7 @@ import com.vidura.lmsbackend.dto.ServerResponse;
 import com.vidura.lmsbackend.security.dto.AuthResponse;
 import com.vidura.lmsbackend.security.dto.LoginRequest;
 import com.vidura.lmsbackend.security.dto.RegisterRequest;
+import com.vidura.lmsbackend.security.entity.User;
 import com.vidura.lmsbackend.security.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,19 @@ public class AuthController {
             return ResponseEntity.ok(serverResponse.fromException(e));
         }
     }
+
+
+
+    @GetMapping("/whoami")
+    public ResponseEntity<ServerResponse<AuthResponse>> whoami() {
+        ServerResponse<AuthResponse> serverResponse = new ServerResponse<>();
+        try {
+            AuthResponse response = authService.getMe();
+            return ResponseEntity.ok(serverResponse.fromSuccess(response));
+        } catch (Exception e) {
+            return ResponseEntity.ok(serverResponse.fromException(e));
+        }
+    }
+
 
 }
