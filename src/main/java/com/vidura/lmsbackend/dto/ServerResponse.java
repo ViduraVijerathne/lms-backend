@@ -15,6 +15,10 @@ public class ServerResponse<T> {
     private String message;
     private T data;
 
+    public void setData(T data) {
+        fromSuccess(data);
+    }
+
     public  ServerResponse<T> fromException(Exception e){
         this.status = 0;
         this.message = e.getMessage();
