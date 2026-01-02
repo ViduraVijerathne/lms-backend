@@ -1,10 +1,13 @@
 package com.vidura.lmsbackend.entity;
 
+import com.vidura.lmsbackend.dto.BatchDTO;
+import com.vidura.lmsbackend.dto.LessonDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,4 +36,15 @@ public class Lesson {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
+
+    public LessonDTO toDTO() {
+        LessonDTO dto = new LessonDTO();
+        dto.setId(id);
+        dto.setName(name);
+        dto.setDescription(description);
+        dto.setThumbnail(thumbnail);
+        dto.setLessonPackID(lessonPack.getId());
+        dto.setTagIDs(tags.stream().map(Tag::getId).toList());
+        return dto;
+    }
 }

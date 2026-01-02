@@ -1,5 +1,7 @@
 package com.vidura.lmsbackend.entity;
 
+import com.vidura.lmsbackend.dto.LessonDTO;
+import com.vidura.lmsbackend.dto.LessonPackDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -27,4 +29,16 @@ public class LessonPack {
     private Batch batch;
 
     private boolean isActive;
+
+    public LessonPackDTO toDTO() {
+        LessonPackDTO dto = new LessonPackDTO();
+        dto.setId(id);
+        dto.setName(name);
+        dto.setDescription(description);
+        dto.setImageURL(imageURL);
+        dto.setCreatedAt(createdAt);
+        dto.setBatchID(batch.getId());
+        dto.setIsActive(isActive);
+        return dto;
+    }
 }
