@@ -56,4 +56,18 @@ class SubjectService {
             throw new RuntimeException("Subject not found with this id");
         }
     }
+
+    public ServerResponse<SubjectDTO> updateSubject(Long id, SubjectDTO subjectDTO) {
+        ServerResponse<SubjectDTO> serverResponse = new ServerResponse<>();
+        Optional<Subject> Optsubject =subjectRepository.findById(id);
+        if(Optsubject.isPresent()) {
+            Subject subject = Optsubject.get();
+            subject.setName(subjectDTO.getName());
+            subjectRepository.save(subject);
+            serverResponse.setData(subjectDTO);
+            return serverResponse;
+        }else{
+            throw new RuntimeException("Subject not found with this id");
+        }
+    }
 }
