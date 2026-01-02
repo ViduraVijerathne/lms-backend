@@ -38,6 +38,8 @@ public class TeacherDTO {
     @Positive(message = "Subject ID must be a positive number")
     private long subjectID;
 
+    private String subjectName;
+
     @NotEmpty(message = "At least one tag ID is required")
     private List<
             @NotNull(message = "Tag ID cannot be null")
