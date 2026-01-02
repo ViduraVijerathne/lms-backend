@@ -3,9 +3,12 @@ package com.vidura.lmsbackend.service;
 import com.vidura.lmsbackend.dto.AnswerDTO;
 import com.vidura.lmsbackend.dto.ServerResponse;
 import com.vidura.lmsbackend.entity.Answer;
+import com.vidura.lmsbackend.entity.Question;
 import com.vidura.lmsbackend.repository.AnswerRepository;
 import com.vidura.lmsbackend.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 class AnswerService {
@@ -18,12 +21,19 @@ class AnswerService {
         this.questionRepository = questionRepository;
     }
 
-//    public ServerResponse<AnswerDTO> addAnswer(AnswerDTO answerDTO) {
-//        Answer answer = new Answer();
-//        answer.setAnswer(answerDTO.getAnswer());
-//        answer.setId(answerDTO.getId());
-//        try{
-//            answer.setQuestion(questionRepository.findById(answerDTO.getId()));
-//        }
-//    }
+    public ServerResponse<AnswerDTO> addAnswer(AnswerDTO answerDTO) {
+        ServerResponse<AnswerDTO> response = new ServerResponse<>();
+        Answer answer = new Answer();
+        answer.setAnswer(answerDTO.getAnswer());
+        answer.setId(answerDTO.getId());
+        Optional<Question> question = questionRepository.findById(answerDTO.getId());
+            if(question.isPresent()) {
+                answer.setQuestion(question.get());
+            }else{
+                throw new RuntimeException("Question not found");
+            }
+        answerRepository.save(answer);
+            response.setData(answerDTO);
+            return response;
+   }
 }
