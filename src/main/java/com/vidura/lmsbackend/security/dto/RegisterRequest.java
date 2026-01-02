@@ -22,4 +22,7 @@ public class RegisterRequest {
     @Size(min = 6,max = 20)
     private String password;
     private Role role;
+    @Size(min = 6,max = 20)
+    private String name;
+
 }

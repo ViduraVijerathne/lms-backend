@@ -28,5 +28,4 @@ public class ServerResponse<T> {
         this.message = "success";
         return  this;
     }
-
 }
