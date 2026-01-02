@@ -2,46 +2,57 @@ package com.vidura.lmsbackend.service;
 
 import com.vidura.lmsbackend.dto.BatchDTO;
 import com.vidura.lmsbackend.dto.ServerResponse;
+import com.vidura.lmsbackend.dto.register.BatchCreateDTO;
 import com.vidura.lmsbackend.entity.Batch;
 import com.vidura.lmsbackend.entity.Teacher;
 import com.vidura.lmsbackend.repository.BatchRepository;
 import com.vidura.lmsbackend.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-class BatchService {
+public class BatchService {
         private final BatchRepository batchRepository;
         private final TeacherRepository teacherRepository;
+    private final TeacherService teacherService;
 
-        public BatchService(BatchRepository batchRepository, TeacherRepository teacherRepository) {
+    BatchService(BatchRepository batchRepository, TeacherRepository teacherRepository, TeacherService teacherService) {
             this.batchRepository = batchRepository;
             this.teacherRepository = teacherRepository;
-        }
+        this.teacherService = teacherService;
+    }
 
-        public ServerResponse<BatchDTO> createBatch(BatchDTO batchDTO) {
+        public ServerResponse<BatchDTO> createBatch(BatchCreateDTO batchDTO) {
             ServerResponse<BatchDTO> response = new ServerResponse<>();
             Batch batch = new Batch();
             batch.setName(batchDTO.getName());
-            Optional<Teacher> teach = teacherRepository.findById(batchDTO.getId());
-            if (teach.isPresent()) {
-                batch.setTeacher(teach.get());
-            }else{
-                throw new RuntimeException("Teacher not found");
-            }
+            batch.setTeacher(teacherService.getCurrentTeacher());
             batchRepository.save(batch);
-            response.setData(batchDTO);
+            response.setData(batch.toDTO());
             return response;
         }
 
-        public ServerResponse<List<BatchDTO>> getAllBatches() {
-            ServerResponse<List<BatchDTO>> response = new ServerResponse<>();
-            List<Batch> batches = batchRepository.findAll();
-            List<BatchDTO> batchesDTOs = batches.stream().map(Batch::toDTO).toList();
-            response.setData(batchesDTOs);
-            return response;
+        public List<BatchDTO> getAllBatchesByTeacher(Long teacherID) {
+        List<BatchDTO> batchDTOS = new ArrayList<>();
+
+        Optional<Teacher> teacher = teacherRepository.findById(teacherID);
+        if(teacher.isEmpty()){
+            throw new RuntimeException("Teacher not found");
+        }
+
+        List<Batch> batch = batchRepository.findBatchesByTeacher(teacher.get());
+        for(Batch b : batch){
+            batchDTOS.add(b.toDTO());
+        }
+        return batchDTOS;
+        }
+
+        public List<BatchDTO> getCurrentUserBatches(){
+        Teacher teacher = teacherService.getCurrentTeacher();
+        return getAllBatchesByTeacher(teacher.getId());
         }
 
         public ServerResponse<BatchDTO> getBatchById(Long id) {
