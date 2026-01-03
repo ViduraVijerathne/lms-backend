@@ -28,7 +28,7 @@ public class DataInitializer implements ApplicationRunner {
 
         System.out.println("=".repeat(60));
         System.out.println("Initial users created successfully!");
-        System.out.println("Username: admin    | Password: admin123 | Role: ADMIN");
+        System.out.println("Username: admin@gmail.com    | Password: admin123 | Role: ADMIN");
 //        System.out.println("Username: cashier  | Password: admin123 | Role: CASHIER");
 //        System.out.println("Username: dev      | Password: admin123 | Role: DEV");
         System.out.println("=".repeat(60));
